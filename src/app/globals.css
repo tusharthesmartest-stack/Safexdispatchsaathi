@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  -webkit-tap-highlight-color: transparent;
+  background: #fafafa;
+}
+
+/* Big tap targets for warehouse use */
+button {
+  touch-action: manipulation;
+}
+
+.btn-found {
+  @apply bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold py-4 px-4 rounded-xl text-lg shadow-md w-full;
+}
+
+.btn-notfound {
+  @apply bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-bold py-4 px-4 rounded-xl text-lg shadow-md w-full;
+}
+
+.btn-primary {
+  @apply bg-brand-600 hover:bg-brand-700 active:bg-brand-700 text-white font-bold py-4 px-4 rounded-xl text-lg shadow-md w-full;
+}
+
+.btn-ghost {
+  @apply bg-white border-2 border-gray-300 text-gray-800 font-semibold py-3 px-4 rounded-xl shadow-sm;
+}
+
+.card {
+  @apply bg-white rounded-2xl shadow-md p-4 border border-gray-200;
+}
+
+.badge {
+  @apply inline-block px-2 py-1 rounded-full text-xs font-bold;
+}
+
+.loc-pill {
+  @apply inline-flex items-center justify-center bg-yellow-300 text-yellow-900 font-extrabold px-4 py-2 rounded-lg text-xl border-2 border-yellow-500;
+}
