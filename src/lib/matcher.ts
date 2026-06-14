@@ -9,7 +9,10 @@ const BRAND_ALIASES: Record<string, string> = {
 };
 
 export function normalizeBrand(b: string): string {
-  return (b || '').toUpperCase().trim().replace(/\s+/g, ' ');
+  return (b || '')
+    .toUpperCase()
+    .replace(/\s+/g, '')
+    .trim();
 }
 
 export function normalizePack(p: string): string {
@@ -31,10 +34,14 @@ export function normalizePack(p: string): string {
     .replace(/1KG/g, '1KG')
     .replace(/1L/g, '1L');
 }
-
 export function normalizeBatch(b: string): string {
-  return (b || '').toUpperCase().replace(/[-\s]/g, '');
+  return (b || '')
+    .toUpperCase()
+    .replace(/\s+/g, '')
+    .replace(/-/g, '')
+    .trim();
 }
+
 
 export function applyBrandAlias(brand: string): string {
   const norm = normalizeBrand(brand);
@@ -60,6 +67,8 @@ export function parseBrandFromDesc(desc: string): string {
 export function matchLineToStock(
   line: InvoiceLine,
   stock: StockRow[]
+  
+  
 ): {
   expectedLocation: string;
   locationOptions: string[];
@@ -72,6 +81,14 @@ const brandNorm = normalizeBrand(brandRaw);
 const packNorm = normalizePack(line.pack);
 const batchNorm = normalizeBatch(line.batch);
 
+console.log("INVOICE LINE", {
+  brand: brandNorm,
+  pack: packNorm,
+  batch: batchNorm,
+});
+
+
+
 console.log("MATCHING");
 console.log({
   invoiceBrand: brandNorm,
@@ -80,8 +97,24 @@ console.log({
 });
   // Only consider saleable stock
   const saleable = stock.filter((s) => (s.storage || '').toUpperCase() === 'FGST');
+  console.log("INVOICE", {
+  brand: brandNorm,
+  pack: packNorm,
+  batch: batchNorm,
+});
+
 saleable.forEach((s) => {
-  if (normalizeBrand(s.brand).includes("SHERDIL")) {
+  if (normalizeBatch(s.batch) === batchNorm) {
+    console.log("BATCH MATCH FOUND", {
+      brand: normalizeBrand(s.brand),
+      pack: normalizePack(s.packing),
+      batch: normalizeBatch(s.batch),
+      location: s.locations,
+    });
+  }
+});
+saleable.forEach((s) => {
+  if (normalizeBrand(s.brand).includes("FINISH")) {
     console.log("STOCK ROW", {
       brand: normalizeBrand(s.brand),
       pack: normalizePack(s.packing),
@@ -91,7 +124,12 @@ saleable.forEach((s) => {
   }
 });
   // Priority 1: Exact (Brand + Pack + Batch)
-  
+  console.log("CHECKING EXACT MATCH", {
+  brandNorm,
+  packNorm,
+  batchNorm,
+});
+
  const exact = saleable.find(
   (s) =>
     normalizeBrand(s.brand) === brandNorm &&

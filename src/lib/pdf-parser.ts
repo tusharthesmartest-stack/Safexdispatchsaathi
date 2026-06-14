@@ -185,7 +185,7 @@ const sn = Number(m[1]);
     const batchLine = lines[j];
 
     const batchMatch =
-  batchLine.match(/\b[A-Z]{2,4}-[A-Z0-9]+\b/);
+  batchLine.match(/\b[A-Z]{2,}[A-Z0-9-]{4,}\b/);
 
     if (!batchMatch) continue;
 
@@ -210,24 +210,30 @@ const sn = Number(m[1]);
       desc.join(" ");
     const cleanProductDesc = productDesc.replace(/^\d+\s+/, "").trim();
 
-    const packLines = [
-  lines[j - 3] || '',
-  lines[j - 2] || '',
-  lines[j - 1] || '',
-];
+  let pack = cleanProductDesc.match(
+  /\d+X\d+(?:L|KG|ML|GM)/i
+)?.[0] || '';
 
-let pack = packLines
-  .join(' ')
-  .replace(/\s+/g, ' ')
-  .trim();
+if (!pack) {
+  const packLines = [
+    lines[j - 3] || '',
+    lines[j - 2] || '',
+    lines[j - 1] || '',
+  ];
 
-const packMatch = pack.match(/\d+X[\dA-Z]+(?:\s*[A-Z]+)?/i);
+  const rawPack = packLines.join(' ');
 
-pack = packMatch ? packMatch[0].trim() : '';
+  const packMatch = rawPack.match(
+    /\d+X\d+\s*(?:M\s*L|G\s*M|ML|GM|L|KG)\s*(?:CS)?/i
+  );
+
+  pack = packMatch ? packMatch[0] : '';
+}
+
 pack = pack
-  .replace(/\bC\b/g, 'CS')
-  .replace(/\bM L\b/g, 'ML')
-  .replace(/\bG M\b/g, 'GM');
+  .replace(/\s+/g, '')
+  .replace(/MLCS/i, 'ML CS')
+  .replace(/GMCS/i, 'GM CS');
 
 console.log({
   original: productDesc,
@@ -249,11 +255,21 @@ brand: parseBrandFromDesc(cleanProductDesc),
     i = j;
   }
 
-  console.log("PARSED ITEMS", results);
+console.log("PARSED ITEMS COUNT:", results.length);
 
-  return results;
+results.forEach((r) => {
+  console.log(
+    r.sn,
+    r.brand,
+    r.pack,
+    r.batch,
+    r.qty,
+    r.cases
+  );
+});
+
+return results;
 }
-
 
 
 export function parseInvoicesFromText(fullText: string): ParsedInvoice[] {
