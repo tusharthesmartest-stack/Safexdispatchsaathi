@@ -185,7 +185,7 @@ const sn = Number(m[1]);
     const batchLine = lines[j];
 
     const batchMatch =
-      batchLine.match(/[A-Z]{2}-?\d+/);
+  batchLine.match(/\b[A-Z]{2,4}-[A-Z0-9]+\b/);
 
     if (!batchMatch) continue;
 
@@ -210,16 +210,20 @@ const sn = Number(m[1]);
       desc.join(" ");
     const cleanProductDesc = productDesc.replace(/^\d+\s+/, "").trim();
 
-    const descParts = cleanProductDesc.split('/');
+    const packLines = [
+  lines[j - 3] || '',
+  lines[j - 2] || '',
+  lines[j - 1] || '',
+];
 
-let pack = '';
+let pack = packLines
+  .join(' ')
+  .replace(/\s+/g, ' ')
+  .trim();
 
-if (descParts.length >= 3) {
-  pack = descParts[2]
-    .replace(/\(\)/g, '')
-    .replace(/\s+3808935.*$/i, '')
-    .trim();
-}
+const packMatch = pack.match(/\d+X[\dA-Z]+(?:\s*[A-Z]+)?/i);
+
+pack = packMatch ? packMatch[0].trim() : '';
 
 console.log({
   original: productDesc,
