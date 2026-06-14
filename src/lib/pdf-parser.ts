@@ -220,7 +220,6 @@ if (descParts.length >= 3) {
     .replace(/\s+3808935.*$/i, '')
     .trim();
 }
-    const pack = descParts.length >= 3 ? descParts[2].trim() : '';
 
 console.log({
   original: productDesc,
