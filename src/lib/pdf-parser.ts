@@ -224,6 +224,10 @@ let pack = packLines
 const packMatch = pack.match(/\d+X[\dA-Z]+(?:\s*[A-Z]+)?/i);
 
 pack = packMatch ? packMatch[0].trim() : '';
+pack = pack
+  .replace(/\bC\b/g, 'CS')
+  .replace(/\bM L\b/g, 'ML')
+  .replace(/\bG M\b/g, 'GM');
 
 console.log({
   original: productDesc,

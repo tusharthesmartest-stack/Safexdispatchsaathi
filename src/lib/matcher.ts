@@ -16,7 +16,20 @@ export function normalizePack(p: string): string {
   return (p || '')
     .toUpperCase()
     .replace(/\s+/g, '')
-    .replace(/[()]/g, '');
+    .replace(/[()]/g, '')
+
+    // PDF break fixes
+    .replace(/500MLCS/g, '500ML')
+    .replace(/250MLCS/g, '250ML')
+    .replace(/500GMCS/g, '500GM')
+    .replace(/1KGCS/g, '1KG')
+    .replace(/1LCS/g, '1L')
+
+    .replace(/500ML/g, '500ML')
+    .replace(/250ML/g, '250ML')
+    .replace(/500GM/g, '500GM')
+    .replace(/1KG/g, '1KG')
+    .replace(/1L/g, '1L');
 }
 
 export function normalizeBatch(b: string): string {
@@ -82,7 +95,8 @@ saleable.forEach((s) => {
   const exact = saleable.find(
   (s) =>
     normalizeBrand(s.brand) === brandNorm &&
-    normalizePack(s.packing) === packNorm &&
+    normalizePack(s.packing).includes(packNorm) ||
+packNorm.includes(normalizePack(s.packing))
     normalizeBatch(s.batch) === batchNorm
 );
   if (exact && exact.locations) {
