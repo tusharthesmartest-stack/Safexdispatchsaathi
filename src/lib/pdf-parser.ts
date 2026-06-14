@@ -211,6 +211,15 @@ const sn = Number(m[1]);
     const cleanProductDesc = productDesc.replace(/^\d+\s+/, "").trim();
 
     const descParts = cleanProductDesc.split('/');
+
+let pack = '';
+
+if (descParts.length >= 3) {
+  pack = descParts[2]
+    .replace(/\(\)/g, '')
+    .replace(/\s+3808935.*$/i, '')
+    .trim();
+}
     const pack = descParts.length >= 3 ? descParts[2].trim() : '';
 
 console.log({
