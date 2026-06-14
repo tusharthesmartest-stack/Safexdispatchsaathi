@@ -1,7 +1,7 @@
 import { google, sheets_v4 } from 'googleapis';
 import { StockRow } from '@/types';
 
-const SHEET_ID = '1v-07quAAMe4pnkCqfOVfXuwUQPiI3wA5t5wUeGVCRKc';
+const SHEET_ID = process.env.GOOGLE_SHEET_ID!;
 
 let cachedClient: sheets_v4.Sheets | null = null;
 
