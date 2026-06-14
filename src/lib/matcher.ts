@@ -92,11 +92,13 @@ saleable.forEach((s) => {
 });
   // Priority 1: Exact (Brand + Pack + Batch)
   
-  const exact = saleable.find(
+ const exact = saleable.find(
   (s) =>
     normalizeBrand(s.brand) === brandNorm &&
-    normalizePack(s.packing).includes(packNorm) ||
-packNorm.includes(normalizePack(s.packing))
+    (
+      normalizePack(s.packing).includes(packNorm) ||
+      packNorm.includes(normalizePack(s.packing))
+    ) &&
     normalizeBatch(s.batch) === batchNorm
 );
   if (exact && exact.locations) {
